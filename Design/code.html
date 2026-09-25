@@ -355,135 +355,160 @@
       opacity: 1;
     }
 
-    /* ===== Hero Sequence Layout (Original Pinning Design + 60FPS Engine) ===== */
-    .hero-sequence-section {
-      --hero-nav-gap: clamp(108px, 12vh, 140px);
+    /* ===== Static Hero: one responsive image, no canvas or scroll interception ===== */
+    .hero-still-section {
       position: relative;
-      height: 100vh;
-      min-height: 100vh;
-      overflow: clip;
+      min-height: max(640px, 100svh);
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+      background: #050608;
+      isolation: isolate;
+    }
+
+    .hero-still-media,
+    .hero-still-media::after {
+      position: absolute;
+      inset: 0;
+    }
+
+    .hero-still-media {
+      z-index: 0;
+      margin: 0;
       background: #050608;
     }
 
-    .hero-sequence-stage {
-      position: relative;
-      height: 100%;
-      width: 100%;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding-top: var(--hero-nav-gap);
-      padding-bottom: 0;
-    }
-
-    .hero-sequence-shell {
-      position: relative;
-      width: calc(100vw - clamp(18px, 4vw, 96px));
-      height: calc(100vh - var(--hero-nav-gap) - clamp(6px, 1vh, 16px));
-      max-width: 1800px;
-      margin-inline: auto;
-      padding: clamp(8px, 1vw, 16px);
-      background:
-        linear-gradient(145deg, rgba(9, 12, 17, 0.92), rgba(21, 25, 32, 0.62)),
-        linear-gradient(145deg, rgba(212, 175, 55, 0.08), rgba(255, 255, 255, 0.02));
-      border: 1px solid rgba(212, 175, 55, 0.18);
-      box-shadow:
-        0 28px 90px rgba(0, 0, 0, 0.34),
-        0 0 0 1px rgba(255, 255, 255, 0.04) inset;
-      backdrop-filter: blur(14px);
-      perspective: 2200px;
-      transform-style: preserve-3d;
-      will-change: transform;
-      backface-visibility: hidden;
-      transform-origin: center center;
-      contain: layout style paint;
-    }
-
-    .hero-sequence-frame {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background:
-        linear-gradient(180deg, rgba(8, 10, 14, 0.96), rgba(4, 5, 8, 1)),
-        #050505;
-      transform-style: preserve-3d;
-      will-change: transform;
-      backface-visibility: hidden;
-    }
-
-    .hero-sequence-frame::before {
+    .hero-still-media::after {
       content: '';
-      position: absolute;
-      inset: 0;
-      border: 1px solid rgba(212, 175, 55, 0.16);
+      z-index: 1;
+      background: rgba(3, 4, 6, 0.18);
       pointer-events: none;
-      z-index: 4;
     }
 
-    .hero-sequence-frame::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0) 14%, rgba(0, 0, 0, 0) 76%, rgba(0, 0, 0, 0.24)),
-        radial-gradient(circle at center, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.12) 68%, rgba(0, 0, 0, 0.26));
-      pointer-events: none;
-      z-index: 3;
-    }
-
-    .hero-sequence-canvas,
-    .hero-sequence-fallback {
+    .hero-still-image {
       width: 100%;
       height: 100%;
       display: block;
       object-fit: cover;
+      object-position: 56% center;
+      animation: hero-image-enter 700ms ease-out both;
     }
 
-    .hero-sequence-canvas {
+    .hero-still-content {
       position: relative;
-      z-index: 2;
-    }
-
-    .hero-sequence-fallback {
-      position: absolute;
-      inset: 0;
       z-index: 1;
-      transition: opacity 0.35s ease;
+      width: min(100% - 48px, 700px);
+      margin: 0 0 clamp(48px, 9vh, 112px) clamp(24px, 8vw, 132px);
+      color: #ffffff;
+      text-shadow: 0 2px 24px rgba(0, 0, 0, 0.58);
+      animation: hero-content-enter 700ms 120ms ease-out both;
     }
 
-    /* ===== Camera Photo Shutter Flash Overlay ===== */
-    .camera-flash-overlay {
-      position: absolute;
-      inset: 0;
+    .hero-still-label {
+      margin: 0 0 16px;
+      color: #f0cf63;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .hero-still-title {
+      max-width: 600px;
+      margin: 0;
+      font-family: "Noto Serif", serif;
+      font-size: clamp(2.75rem, 6vw, 5.75rem);
+      font-weight: 400;
+      line-height: 0.98;
+    }
+
+    .hero-still-copy {
+      max-width: 500px;
+      margin: 22px 0 0;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: clamp(1rem, 1.5vw, 1.125rem);
+      line-height: 1.65;
+    }
+
+    .hero-still-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .hero-still-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 24px;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      color: #ffffff;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+    }
+
+    .hero-still-action:hover {
+      background: #f0cf63;
+      border-color: #f0cf63;
+      color: #17130a;
+    }
+
+    .hero-still-action-primary {
+      background: #f0cf63;
+      border-color: #f0cf63;
+      color: #17130a;
+    }
+
+    .hero-still-action-primary:hover {
       background: #ffffff;
-      opacity: 0;
-      pointer-events: none;
-      z-index: 20;
-      transition: opacity 0.15s ease-out;
+      border-color: #ffffff;
     }
 
-    .camera-flash-overlay.flash-active {
-      opacity: 0.9;
-      transition: opacity 0.02s ease-in;
+    @keyframes hero-image-enter {
+      from { opacity: 0; transform: scale(1.025); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes hero-content-enter {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     @media (max-width: 768px) {
-      .hero-sequence-section {
-        --hero-nav-gap: 90px;
+      .hero-still-section {
+        min-height: max(600px, 92svh);
       }
 
-      .hero-sequence-stage {
-        padding-top: calc(var(--hero-nav-gap) + 4px);
+      .hero-still-media::after {
+        background: rgba(3, 4, 6, 0.32);
       }
 
-      .hero-sequence-shell {
-        width: calc(100vw - 12px);
-        height: calc(100vh - var(--hero-nav-gap) - 18px);
-        padding: 8px;
-        box-shadow:
-          0 18px 48px rgba(0, 0, 0, 0.28),
-          0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+      .hero-still-image {
+        object-position: 62% center;
+      }
+
+      .hero-still-content {
+        width: calc(100% - 40px);
+        margin: 0 20px 44px;
+      }
+
+      .hero-still-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .hero-still-action {
+        padding: 0 12px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-still-image,
+      .hero-still-content {
+        animation: none;
       }
     }
   </style>
@@ -497,7 +522,7 @@
   <nav
     class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 md:px-12 py-4 bg-[rgba(24,28,35,0.48)] backdrop-blur-[26px] shadow-[0_12px_40px_rgba(26,28,28,0.18)]">
     <a href="#" class="flex items-center gap-3 group">
-      <img src="../images/Logo.png" alt="Sonalika Photography Logo" style="border-radius: 50px;"
+      <img src="../images/Logo.png" alt="Sonalika Photography Logo" decoding="async" style="border-radius: 50px;"
         class="w-14 h-14 md:w-16 md:h-16 object-contain transition-transform duration-500 group-hover:scale-110" />
       <div class="hidden sm:block">
         <div class="text-lg md:text-xl font-headline uppercase tracking-[0.15em] text-[#f0cf63] leading-tight">
@@ -542,24 +567,18 @@
     <!-- ============================================ -->
     <!-- Hero Section -->
     <!-- ============================================ -->
-    <section class="hero-sequence-section overflow-hidden" id="heroSequence">
-      <!-- Background decorative elements -->
-      <div class="absolute inset-0 pointer-events-none overflow-hidden">
-        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/3 rounded-full blur-[120px] animate-float"></div>
-        <div
-          class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-primary-container/5 rounded-full blur-[100px] animate-float"
-          style="animation-delay: -3s;"></div>
-      </div>
-
-      <div class="hero-sequence-stage">
-        <div class="hero-sequence-shell" id="heroContent">
-          <div class="hero-sequence-frame" id="heroSequenceFrame">
-            <div class="camera-flash-overlay" id="cameraFlashOverlay"></div>
-            <img alt="Hero sequence fallback" class="hero-sequence-fallback" id="heroSequenceFallback"
-              src="../Hero_camera/Robotic_camera_orbiting_202604011739_000.jpg" />
-            <canvas aria-label="Animated hero frame sequence" class="hero-sequence-canvas"
-              id="heroSequenceCanvas"></canvas>
-          </div>
+    <section class="hero-still-section" id="hero">
+      <picture class="hero-still-media">
+        <img class="hero-still-image" src="../images/hero-camera-studio-v2.png"
+          alt="Professional camera in a dark studio" width="1536" height="1024" fetchpriority="high" decoding="async" />
+      </picture>
+      <div class="hero-still-content">
+        <p class="hero-still-label">Sonalika Photography</p>
+        <h1 class="hero-still-title">Stories, held in light.</h1>
+        <p class="hero-still-copy">Thoughtful photography for weddings, portraits, and celebrations worth remembering.</p>
+        <div class="hero-still-actions">
+          <a class="hero-still-action hero-still-action-primary" href="#gallery">View gallery</a>
+          <a class="hero-still-action" href="#contact">Plan a session</a>
         </div>
       </div>
     </section>
@@ -567,7 +586,7 @@
     <!-- ============================================ -->
     <!-- About Section -->
     <!-- ============================================ -->
-    <section class="pt-4 md:pt-6 pb-24 md:pb-40 px-6 md:px-24 bg-surface" id="about" style="margin-top: 80px;">
+    <section class="pt-20 md:pt-28 pb-24 md:pb-40 px-6 md:px-24 bg-surface" id="about">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-32 items-center max-w-7xl mx-auto">
         <!-- Portrait with Parallax -->
         <div class="relative portrait-parallax-container group reveal" id="portraitContainer">
@@ -575,7 +594,7 @@
             <div class="portrait-image-wrapper shadow-2xl border-[12px] border-white dark:border-stone-800">
               <img alt="Professional portrait of Suresh Krisna T"
                 class="w-full aspect-[4/5] object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 portrait-image-zoom"
-                src="../images/Suresh.jpeg" />
+                src="../images/Suresh.jpeg" loading="lazy" decoding="async" />
             </div>
           </div>
           <div class="absolute -bottom-8 -right-8 w-48 h-48 bg-primary/5 -z-10 blur-3xl opacity-60"></div>
@@ -633,52 +652,52 @@
               class="shrink-0 w-[40vw] md:w-[22vw] h-[50vh] md:h-[60vh] bg-surface-variant overflow-hidden group shadow-lg relative gallery-item">
               <img alt="Wedding scene"
                 class="w-full h-full object-cover scale-[1.03] group-hover:scale-100 transition-transform duration-700"
-                src="../images/1.jpeg" />
+                src="../images/1.jpeg" loading="lazy" decoding="async" />
             </div>
             <div
               class="shrink-0 w-[55vw] md:w-[30vw] h-[50vh] md:h-[60vh] bg-surface-variant overflow-hidden group shadow-lg relative gallery-item">
               <img alt="Editorial fashion"
                 class="w-full h-full object-cover scale-[1.03] group-hover:scale-100 transition-transform duration-700"
-                src="../images/2.jpeg" />
+                src="../images/2.jpeg" loading="lazy" decoding="async" />
             </div>
             <div
               class="shrink-0 w-[40vw] md:w-[22vw] h-[50vh] md:h-[60vh] bg-surface-variant overflow-hidden group shadow-lg relative gallery-item">
               <img alt="Landscape abstract"
                 class="w-full h-full object-cover scale-[1.03] group-hover:scale-100 transition-transform duration-700"
-                src="../images/3.jpeg" />
+                src="../images/3.jpeg" loading="lazy" decoding="async" />
             </div>
             <div
               class="shrink-0 w-[45vw] md:w-[26vw] h-[50vh] md:h-[60vh] bg-surface-variant overflow-hidden group shadow-lg relative gallery-item">
               <img alt="Wedding ceremony"
                 class="w-full h-full object-cover scale-[1.03] group-hover:scale-100 transition-transform duration-700"
-                src="../images/Wedding.jpeg" />
+                src="../images/Wedding.jpeg" loading="lazy" decoding="async" />
             </div>
           </div>
           <!-- Duplicate set for seamless loop -->
-          <div class="flex gap-6 md:gap-8 px-4 items-center">
+          <div class="flex gap-6 md:gap-8 px-4 items-center" aria-hidden="true">
             <div
               class="shrink-0 w-[40vw] md:w-[22vw] h-[50vh] md:h-[60vh] bg-surface-variant overflow-hidden group shadow-lg relative gallery-item">
               <img alt="Wedding scene"
                 class="w-full h-full object-cover scale-[1.03] group-hover:scale-100 transition-transform duration-700"
-                src="../images/1.jpeg" />
+                src="../images/1.jpeg" loading="lazy" decoding="async" />
             </div>
             <div
               class="shrink-0 w-[55vw] md:w-[30vw] h-[50vh] md:h-[60vh] bg-surface-variant overflow-hidden group shadow-lg relative gallery-item">
               <img alt="Editorial fashion"
                 class="w-full h-full object-cover scale-[1.03] group-hover:scale-100 transition-transform duration-700"
-                src="../images/2.jpeg" />
+                src="../images/2.jpeg" loading="lazy" decoding="async" />
             </div>
             <div
               class="shrink-0 w-[40vw] md:w-[22vw] h-[50vh] md:h-[60vh] bg-surface-variant overflow-hidden group shadow-lg relative gallery-item">
               <img alt="Landscape abstract"
                 class="w-full h-full object-cover scale-[1.03] group-hover:scale-100 transition-transform duration-700"
-                src="../images/3.jpeg" />
+                src="../images/3.jpeg" loading="lazy" decoding="async" />
             </div>
             <div
               class="shrink-0 w-[45vw] md:w-[26vw] h-[50vh] md:h-[60vh] bg-surface-variant overflow-hidden group shadow-lg relative gallery-item">
               <img alt="Wedding ceremony"
                 class="w-full h-full object-cover scale-[1.03] group-hover:scale-100 transition-transform duration-700"
-                src="../images/Wedding.jpeg" />
+                src="../images/Wedding.jpeg" loading="lazy" decoding="async" />
             </div>
           </div>
         </div>
@@ -705,7 +724,7 @@
               class="aspect-square mb-6 overflow-hidden border border-outline-variant/20 p-2 group-hover:border-primary-container transition-colors duration-500">
               <img alt="Wedding Photography" class="w-full h-full object-cover transition-transform duration-700"
                 data-alt="luxury wedding banquet table with white flowers and crystal glasses, soft morning sunlight through window"
-                src="../images/wed.jpg" />
+                src="../images/wed.jpg" loading="lazy" decoding="async" />
             </div>
             <h4
               class="text-center font-headline text-2xl italic text-on-surface group-hover:text-primary transition-colors">
@@ -718,7 +737,7 @@
               class="aspect-square mb-6 overflow-hidden border border-outline-variant/20 p-2 group-hover:border-primary-container transition-colors duration-500">
               <img alt="Pre-wedding Photography" class="w-full h-full object-cover transition-transform duration-700"
                 data-alt="couple walking in a field of tall grass during golden hour, silhouettes against a glowing warm sun"
-                src="../images/pre.jpg" />
+                src="../images/pre.jpg" loading="lazy" decoding="async" />
             </div>
             <h4
               class="text-center font-headline text-2xl italic text-on-surface group-hover:text-primary transition-colors">
@@ -731,7 +750,7 @@
               class="aspect-square mb-6 overflow-hidden border border-outline-variant/20 p-2 group-hover:border-primary-container transition-colors duration-500">
               <img alt="Bangle wearing" class="w-full h-full object-cover transition-transform duration-700"
                 data-alt="close up of intricate gold jewellery on hands with henna patterns, bright vibrant traditional ceremony colors"
-                src="../images/baby.jpg" />
+                src="../images/baby.jpg" loading="lazy" decoding="async" />
             </div>
             <h4
               class="text-center font-headline text-2xl italic text-on-surface group-hover:text-primary transition-colors">
@@ -744,7 +763,7 @@
               class="aspect-square mb-6 overflow-hidden border border-outline-variant/20 p-2 group-hover:border-primary-container transition-colors duration-500">
               <img alt="Baby naming" class="w-full h-full object-cover transition-transform duration-700"
                 data-alt="soft focused image of a baby's tiny hand grasping a finger, clean white nursery lighting and soft textiles"
-                src="../images/name.jpg" />
+                src="../images/name.jpg" loading="lazy" decoding="async" />
             </div>
             <h4
               class="text-center font-headline text-2xl italic text-on-surface group-hover:text-primary transition-colors">
@@ -757,7 +776,7 @@
               class="aspect-square mb-6 overflow-hidden border border-outline-variant/20 p-2 group-hover:border-primary-container transition-colors duration-500">
               <img alt="Birthday" class="w-full h-full object-cover transition-transform duration-700"
                 data-alt="elegant minimalist birthday cake with single candle on a marble stand, clean studio lighting"
-                src="../images/birth.jpg" />
+                src="../images/birth.jpg" loading="lazy" decoding="async" />
             </div>
             <h4
               class="text-center font-headline text-2xl italic text-on-surface group-hover:text-primary transition-colors">
@@ -770,7 +789,7 @@
               class="aspect-square mb-6 overflow-hidden border border-outline-variant/20 p-2 group-hover:border-primary-container transition-colors duration-500">
               <img alt="Corporate" class="w-full h-full object-cover transition-transform duration-700"
                 data-alt="modern glass office building reflection at dusk, corporate professional aesthetic with deep blue tones"
-                src="../images/cor.jpg" />
+                src="../images/cor.jpg" loading="lazy" decoding="async" />
             </div>
             <h4
               class="text-center font-headline text-2xl italic text-on-surface group-hover:text-primary transition-colors">
@@ -790,7 +809,7 @@
 
       <!-- Top Brand Area -->
       <div class="flex flex-col items-center mb-16 reveal">
-        <img src="../images/Logo.png" alt="Sonalika Photography Logo"
+        <img src="../images/Logo.png" alt="Sonalika Photography Logo" loading="lazy" decoding="async"
           class="w-20 h-20 md:w-24 md:h-24 object-contain mb-4 opacity-80" />
         <div class="text-3xl md:text-5xl font-headline uppercase tracking-[0.28em] text-primary mb-2">Sonalika
           Photography</div>
